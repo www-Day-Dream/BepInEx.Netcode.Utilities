@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <EmbeddedResource Include="..\BepInEx.Netcode.Utilities.Resources\bin\Release\netstandard2.1\en-us\BepInEx.Netcode.Utilities.Resources.resources.dll">
+            <Link>Resources\en-us\BepInEx.Netcode.Utilities.Resources.resources.dll</Link>
+        </EmbeddedResource>
+        <EmbeddedResource Include="..\BepInEx.Netcode.Utilities.Resources\bin\Release\netstandard2.1\es-es\BepInEx.Netcode.Utilities.Resources.resources.dll">
+            <Link>Resources\es-es\BepInEx.Netcode.Utilities.Resources.resources.dll</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+    
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.1;net47</TargetFrameworks>
+        <AssemblyName>BepInEx.Netcode.Utilities</AssemblyName>
+        <Product>BepInEx Netcode Utilities</Product>
+        <Version>1.0.0</Version>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>none</DebugType>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Signature.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.AutoPlugin" Version="1.1.0" PrivateAssets="all"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" PrivateAssets="all"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Resources\en-us\" />
+      <Folder Include="Resources\es-es\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Reference Include="BepInEx.Netcode.Utilities.Resources">
+        <HintPath>..\BepInEx.Netcode.Utilities.Resources\bin\Release\netstandard2.1\BepInEx.Netcode.Utilities.Resources.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+
+    <Target Name="AddGeneratedFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)GeneratedFile.cs">
+        <PropertyGroup>
+            <BepInExPluginGuid Condition="'$(BepInExPluginGuid)' == ''">$(AssemblyName)</BepInExPluginGuid>
+            <BepInExPluginName Condition="'$(BepInExPluginName)' == ''">$(Product)</BepInExPluginName>
+            <BepInExPluginVersion Condition="'$(BepInExPluginVersion)' == ''">$(Version)</BepInExPluginVersion>
+            <GeneratedText><![CDATA[
+namespace $(RootNamespace)
+{
+    internal static class MyPluginInfo
+    {
+        internal const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
+        internal const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
+        internal const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
+    }
+}
+      ]]></GeneratedText>
+            <GeneratedFilePath>$(IntermediateOutputPath)MyPluginInfo.cs</GeneratedFilePath>
+        </PropertyGroup>
+        <ItemGroup>
+            <Compile Include="$(GeneratedFilePath)" />
+            <FileWrites Include="$(GeneratedFilePath)" />
+        </ItemGroup>
+        <WriteLinesToFile Lines="$(GeneratedText)" File="$(GeneratedFilePath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    </Target>
+</Project>

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net47</TargetFramework>
+        <AssemblyName>BepInEx.Netcode.Utilities.Tester</AssemblyName>
+        <Product>BepInEx Netcode Utilities Tester</Product>
+        <Version>1.0.0</Version>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" PrivateAssets="all"/>
+    </ItemGroup>
+    
+    <!-- The following code is primarily from https://github.com/BepInEx/BepInEx.Templates/tree/master/BepInEx.PluginInfoProps -->
+    <Target Name="AddGeneratedFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)GeneratedFile.cs">
+        <PropertyGroup>
+            <BepInExPluginGuid Condition="'$(BepInExPluginGuid)' == ''">$(AssemblyName)</BepInExPluginGuid>
+            <BepInExPluginName Condition="'$(BepInExPluginName)' == ''">$(Product)</BepInExPluginName>
+            <BepInExPluginVersion Condition="'$(BepInExPluginVersion)' == ''">$(Version)</BepInExPluginVersion>
+            <GeneratedText><![CDATA[
+namespace $(RootNamespace)
+{
+    internal static class MyPluginInfo
+    {
+        internal const string PLUGIN_GUID = "$(BepInExPluginGuid)"%3B
+        internal const string PLUGIN_NAME = "$(BepInExPluginName)"%3B
+        internal const string PLUGIN_VERSION = "$(BepInExPluginVersion)"%3B
+    }
+}
+      ]]></GeneratedText>
+            <GeneratedFilePath>$(IntermediateOutputPath)MyPluginInfo.cs</GeneratedFilePath>
+        </PropertyGroup>
+        <ItemGroup>
+            <Compile Include="$(GeneratedFilePath)" />
+            <FileWrites Include="$(GeneratedFilePath)" />
+        </ItemGroup>
+        <WriteLinesToFile Lines="$(GeneratedText)" File="$(GeneratedFilePath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    </Target>
+</Project>

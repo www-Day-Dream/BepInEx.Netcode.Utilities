@@ -1,0 +1,17 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="ERROR_TypeAlreadyPatchedByNGO" xml:space="preserve">
+        <value>Plugin {0} is trying to patch type {1} via attribute but the type is suspected to be patched by NGO IL Post-Processor. Stopping patch for type; If you suspect this is incorrect, try removing any methods named `InitializeRPCS_{1}` from your type OR remove the [PatchNetworkBehaviour] to disable Runtime Patching.</value>
+    </data>
+</root>
